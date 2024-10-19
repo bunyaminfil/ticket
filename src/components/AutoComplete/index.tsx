@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Select, Spin } from "antd";
 import { EnvironmentOutlined } from "@ant-design/icons";
 import debounce from "lodash/debounce";
+import { ILocation } from "../../app/types/locationTypes";
 
 const { Option } = Select;
 
 interface AutoCompleteWithIconProps {
     value: null | string; // For multiple selections, value should be an array
-    onChange: (value: string) => void; // Update handler to accept array of strings
+    onChange: (value: ILocation) => void; // Update handler to accept array of strings
     onSearch: (value: string) => void; // Update handler to accept array of strings
-    busLocations: any[]; // Array of location data
+    busLocations: ILocation[]; // Array of location data
 }
 
 const AutoCompleteWithIcon: React.FC<AutoCompleteWithIconProps> = ({ value, onChange, onSearch, busLocations }) => {
@@ -24,7 +25,7 @@ const AutoCompleteWithIcon: React.FC<AutoCompleteWithIconProps> = ({ value, onCh
     // Handle selecting an option
     const handleSelect = (selectedValue: string) => {
         const filter = busLocations.find((location) => location.name === selectedValue);
-        onChange(filter); // Set the selected value
+        onChange(filter as ILocation); // Set the selected value
         setIsDropdownOpen(false); // Close the dropdown after selection
     };
 
@@ -52,9 +53,9 @@ const AutoCompleteWithIcon: React.FC<AutoCompleteWithIconProps> = ({ value, onCh
             >
                 {busLocations
                     ?.filter(
-                        (location: any) => location.name.toUpperCase().includes(searchText.toUpperCase()), // Filter options based on search input
+                        (location: ILocation) => location.name.toUpperCase().includes(searchText.toUpperCase()), // Filter options based on search input
                     )
-                    .map((opt: any) => (
+                    .map((opt: { id: number; name: string }) => (
                         <Option key={opt.id} value={opt.name}>
                             {opt.name}
                         </Option>

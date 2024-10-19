@@ -3,10 +3,11 @@ import { useAppDispatch, useAppSelector } from "../../app/store/hook";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import DestinationCard from "../../components/DestinationCard";
-import "./style.css";
 import { getJourneys } from "../../app/store/reducers/journeys";
 import { Empty } from "antd";
 import dayjs from "dayjs";
+import { IJourneys } from "../../app/types/journeyTypes";
+import "./style.css";
 
 const Journey = () => {
     const dispatch = useAppDispatch();
@@ -53,7 +54,7 @@ const Journey = () => {
                 </div>
             </div>
             <div className="content">
-                {journeys ? journeys.map((journey: any) => <DestinationCard journey={journey} />) : <Empty />}
+                {journeys ? journeys.map((journey: IJourneys) => <DestinationCard journey={journey} />) : <Empty />}
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 export type initStateUsers = {
     loading: boolean;
     error: any;
-    sessions: any;
+    sessions: { status: string };
 };
 
 export type ISessionPayload = {

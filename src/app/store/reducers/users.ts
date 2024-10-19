@@ -5,7 +5,7 @@ import { initStateUsers } from "../../types/userTypes";
 const initialState: initStateUsers = {
     loading: false,
     error: null,
-    sessions: { data: [], totalPages: 0, totalRecords: 0 },
+    sessions: { status: "" },
 };
 export const getSession = createAsyncThunk("location/getSession", async (data: any) => {
     try {

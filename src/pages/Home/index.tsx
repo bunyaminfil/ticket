@@ -147,7 +147,7 @@ const Home = () => {
     }, [secondSelectedObject]);
 
     /* Function to handle selecting values */
-    const handleFirstValueChange = (value: any) => {
+    const handleFirstValueChange = (value: ILocation) => {
         if (value.id === secondSelectedObject?.id) {
             setSecondSelectedObject(firstSelectedObject);
         }
