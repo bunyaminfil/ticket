@@ -1,0 +1,81 @@
+.home .content {
+    padding: 16px;
+}
+.home .content .selection {
+    position: relative;
+}
+.home .content .selection .select {
+    background-color: #fff;
+    margin-top: 4px;
+    padding: 8px;
+    border-radius: 2px;
+}
+.home .content .selection .select .ant-select-selector {
+    border: none;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+.home .content .selection .select .select-title {
+    padding-left: 16px;
+    color: #2f4eb4;
+    font-weight: 600;
+}
+.home .content .selection .swap {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    /* left: 90%; */
+    right: 0;
+    border-radius: 50%;
+}
+.home .datepicker {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    margin-top: 20px;
+    padding: 8px;
+    border-radius: 2px;
+}
+.home .datepicker .date .date-title {
+    padding-left: 16px;
+    color: #2f4eb4;
+    font-weight: 600;
+}
+.home .datepicker .ant-picker {
+    width: 100%;
+    border-color: transparent;
+}
+.home .datepicker .ant-picker:hover {
+    border-color: transparent;
+    box-shadow: none;
+}
+.home .datepicker .ant-picker-input {
+    flex-direction: row-reverse;
+}
+.home .datepicker .ant-picker-input span {
+    margin-inline-end: 4px;
+}
+.home .buttons {
+    display: flex;
+    flex-direction: column;
+}
+.home .buttons button {
+    height: 24px;
+    font-size: 12px;
+    margin: 4px;
+}
+.home .buttons button:hover {
+    background-color: #5d686e !important;
+    color: #fff !important;
+}
+.home .action {
+    text-align: center;
+}
+.home .action button {
+    background-color: #2f4eb4;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    height: 41px;
+    width: 75%;
+    margin-top: 21px;
+}
