@@ -1,61 +1,24 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "../api";
-import { initStateUsers, userDetailsType } from "../../types/userTypes";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { initStateUsers } from "../../types/userTypes";
 
 // Constants
 const initialState: initStateUsers = {
     loading: false,
     error: null,
-    busLocations: { data: [], totalPages: 0, totalRecords: 0 },
-    isUserLogin: false,
-    currentUserDetail: null,
+    sessions: { data: [], totalPages: 0, totalRecords: 0 },
 };
-export const getSession = createAsyncThunk("location/getSession", async () => {
-    const response = await axiosInstance.post(
-        `/client/getsession`,
-        {
-            type: 1,
-            connection: {
-                "ip-address": "165.114.41.21",
-                port: "5117",
-            },
-            browser: {
-                name: "Chrome",
-                version: "47.0.0.12",
-            },
-        },
-        {
-            headers: {
-                Authorization: true,
-            },
-        },
-    );
+export const getSession = createAsyncThunk("location/getSession", async (data: any) => {
     try {
-        return response;
-    } catch (error: any) {
-        return error.response;
-    }
-});
-export const getBusLocations = createAsyncThunk("location/getBusLocations", async () => {
-    const response = await axiosInstance.post(
-        `/location/getbuslocations`,
-        {
-            data: null,
-            "device-session": {
-                "session-id": "QQk4IznuOP4y0BsrmamI1tYyuYCMj29+kPBhpCVcr/U=",
-                "device-id": "11BBqme8k08euOz+SQeGfuwOwsPBoOBuw6t62Jj1A7o=",
-            },
-            date: "2024-10-10T11:33:00",
-            language: "tr-TR",
-        },
-        {
+        const response = await fetch("/api/client/getsession", {
+            method: "POST",
             headers: {
-                Authorization: true,
+                "Content-Type": "application/json",
+                Authorization: `Basic ${process.env.REACT_APP_API_CLIENT_TOKEN}`,
             },
-        },
-    );
-    try {
-        return response;
+            body: JSON.stringify(data),
+        });
+        const res = await response.json();
+        return res;
     } catch (error: any) {
         return error.response;
     }
@@ -64,24 +27,19 @@ export const getBusLocations = createAsyncThunk("location/getBusLocations", asyn
 export const usersSlice = createSlice({
     name: "users",
     initialState,
-    reducers: {
-        setCurrentUserDetails: (state, action: PayloadAction<userDetailsType>) => {
-            state.currentUserDetail = action.payload;
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getBusLocations.pending, (state) => {
+            .addCase(getSession.pending, (state) => {
                 state.loading = false;
             })
-            .addCase(getBusLocations.fulfilled, (state, action) => {
+            .addCase(getSession.fulfilled, (state, action) => {
                 state.loading = true;
-                state.busLocations = action.payload;
+                state.sessions = action.payload;
             })
-            .addCase(getBusLocations.rejected, (state, action) => {
+            .addCase(getSession.rejected, (state, action) => {
                 state.error = action.payload;
             });
     },
 });
-export const { setCurrentUserDetails } = usersSlice.actions;
 export default usersSlice.reducer;

@@ -21,6 +21,7 @@
     "react-router-dom": "^6.27.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
+    "ua-parser-js": "^1.0.39",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -29,6 +30,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "https://v2-api.obilet.com",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -48,7 +50,9 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.12",
     "@types/react-router-dom": "^5.3.3",
+    "@types/ua-parser-js": "^0.7.39",
     "typescript": "^5.6.3"
   }
 }

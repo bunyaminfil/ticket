@@ -1,3 +1,8 @@
+export type IInitJourney = {
+    loading: boolean;
+    error: any;
+    journeys: IJourneys[];
+};
 export interface IJourneys {
     id: number;
     "partner-id": number;

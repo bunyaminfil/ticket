@@ -1,3 +1,8 @@
+export type IInitLocation = {
+    loading: boolean;
+    error: any;
+    busLocations: ILocation[];
+};
 export interface ILocation {
     id: number;
     "parent-id": number;
