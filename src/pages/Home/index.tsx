@@ -27,7 +27,7 @@ const Home = () => {
     const selectToday = () => {
         setSelectedDate(dayjs()); // Sets today's date
     };
-    console.log(busLocations, data, locations);
+
     // Function to handle selecting tomorrow's date
     const selectTomorrow = () => {
         setSelectedDate(dayjs().add(1, "day")); // Sets tomorrow's date
@@ -35,6 +35,10 @@ const Home = () => {
 
     const isTodayActive = selectedDate && selectedDate.isSame(dayjs(), "day");
     const isTomorrowActive = selectedDate && selectedDate.isSame(dayjs().add(1, "day"), "day");
+
+    const onClick = () => {
+        console.log(selectedDate, firstValue, secondValue);
+    };
 
     const onFetch = async () => {
         await dispatch(getBusLocations());
@@ -130,7 +134,7 @@ const Home = () => {
                 </div>
                 <div className="action">
                     <Link to="/journey">
-                        <Button>Find ticket</Button>
+                        <Button onClick={onClick}>Find ticket</Button>
                     </Link>
                 </div>
             </div>
