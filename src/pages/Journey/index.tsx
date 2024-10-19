@@ -1,14 +1,12 @@
 import React from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { Layout } from "antd";
 import DestinationCard from "../../components/DestinationCard";
 import "./style.css";
-const { Header, Content, Footer } = Layout;
 
 const Home = () => {
     return (
-        <div  className="journey">
+        <div className="journey">
             <div className="header">
                 <div className="icon">
                     <Link to="/">

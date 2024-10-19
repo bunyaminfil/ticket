@@ -1,3 +1,7 @@
+.home .header {
+    background-color: #2f4eb4;
+    height: 40px;
+}
 .home .content {
     padding: 16px;
 }
@@ -6,17 +10,29 @@
 }
 .home .content .selection .select {
     background-color: #fff;
-    margin-top: 4px;
+    margin-top: 3px;
     padding: 8px;
     border-radius: 2px;
 }
+.home .content .selection .select .auto-complete-wrapper {
+    display: flex;
+    align-items: center;
+}
+.home .content .selection .select .auto-complete-wrapper .mapIcon {
+    color: #5d686e;
+    opacity: 0.5;
+}
 .home .content .selection .select .ant-select-selector {
+    padding: 0 8px;
     border: none;
     border-color: transparent !important;
     box-shadow: none !important;
 }
+.home .content .selection .select .ant-select-selection-search-input {
+    margin-left: -3px;
+}
 .home .content .selection .select .select-title {
-    padding-left: 16px;
+    padding-left: 24px;
     color: #2f4eb4;
     font-weight: 600;
 }
@@ -36,12 +52,13 @@
     border-radius: 2px;
 }
 .home .datepicker .date .date-title {
-    padding-left: 16px;
+    padding-left: 24px;
     color: #2f4eb4;
     font-weight: 600;
 }
 .home .datepicker .ant-picker {
     width: 100%;
+    padding: 4px 0;
     border-color: transparent;
 }
 .home .datepicker .ant-picker:hover {
@@ -52,7 +69,7 @@
     flex-direction: row-reverse;
 }
 .home .datepicker .ant-picker-input span {
-    margin-inline-end: 4px;
+    margin-inline-end: 2px;
 }
 .home .buttons {
     display: flex;
@@ -63,6 +80,7 @@
     font-size: 12px;
     margin: 4px;
 }
+.home .buttons .active-button,
 .home .buttons button:hover {
     background-color: #5d686e !important;
     color: #fff !important;
@@ -78,4 +96,13 @@
     height: 41px;
     width: 75%;
     margin-top: 21px;
+}
+.home .footer {
+    background-color: #fff;
+    text-align: left;
+    padding: 0 20px 0 29px;
+    position: fixed;
+    bottom: 0;
+    color: #5d686e;
+    font-size: 12px;
 }

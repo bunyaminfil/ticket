@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../api";
-import { initStateUsers, userDetailsType, userListType } from "../../types/userTypes";
+import { initStateUsers, userDetailsType } from "../../types/userTypes";
 
 // Constants
 const initialState: initStateUsers = {
@@ -37,7 +37,7 @@ export const getSession = createAsyncThunk("location/getSession", async () => {
     }
 });
 export const getBusLocations = createAsyncThunk("location/getBusLocations", async () => {
-    const response = await axiosInstance.post<userListType[]>(
+    const response = await axiosInstance.post(
         `/location/getbuslocations`,
         {
             data: null,
