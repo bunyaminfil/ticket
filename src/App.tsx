@@ -1,10 +1,9 @@
-import React from "react";
-import logo from "./logo.svg";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { store } from "./store";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Journey from "./pages/Journey";
+
 import "./App.css";
 
 function App() {

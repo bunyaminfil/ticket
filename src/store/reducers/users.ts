@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { initStateUsers } from "../../types/userTypes";
+import type { InitStateUsers } from "../../types/user.types";
 
-// Constants
-const initialState: initStateUsers = {
+// Initial State
+const initialState: InitStateUsers = {
     loading: false,
     error: null,
     sessions: { status: "" },

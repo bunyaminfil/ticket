@@ -1,4 +1,4 @@
-export type IInitLocation = {
+export type InitLocation = {
     loading: boolean;
     error: any;
     busLocations: ILocation[];
@@ -32,4 +32,9 @@ export interface GeoLocation {
     latitude: number;
     longitude: number;
     zoom: number;
+}
+export interface IStorageLocation {
+  date: string;
+  origin: ILocation;
+  destination: ILocation;
 }

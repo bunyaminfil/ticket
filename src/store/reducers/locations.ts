@@ -1,26 +1,26 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IInitLocation } from "../../types/locationTypes";
-import { ISessionPayload } from "../../types/userTypes";
+import type { InitLocation } from "../../types/location.types";
+import type { ISessionPayload } from "../../types/user.types";
 
-// Constants
-const initialState: IInitLocation = {
+// Initial State
+const initialState: InitLocation = {
     loading: false,
     error: null,
     busLocations: [],
 };
 
 export const getBusLocations = createAsyncThunk("location/getBusLocations", async (payload: ISessionPayload) => {
-    const response = await fetch("/api/location/getbuslocations", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Basic ${process.env.REACT_APP_API_CLIENT_TOKEN}`,
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
     try {
+        const response = await fetch("/api/location/getbuslocations", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Basic ${process.env.REACT_APP_API_CLIENT_TOKEN}`,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
         return data;
     } catch (error: any) {
         return error.response;

@@ -1,7 +1,8 @@
 import React from "react";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import { IJourneys } from "../../app/types/journeyTypes";
+import type { IJourneys } from "../../types/journey.types";
+
 import "./style.css";
 
 interface IProps {

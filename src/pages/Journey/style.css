@@ -1,9 +1,18 @@
+.journey {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 .journey .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 18px;
     background-color: #2f4eb4;
+}
+
+.journey .content {
+    flex-grow: 1;
 }
 
 .journey .icon {
@@ -28,10 +37,6 @@
     font-size: 12px;
     color: #fff;
     margin-top: 5px;
-}
-
-.journey .content {
-    padding: 8px;
 }
 
 .journey button {

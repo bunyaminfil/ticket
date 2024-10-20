@@ -1,27 +1,35 @@
 import React, { useState, useEffect, useRef } from "react";
-import { DatePicker, Button, Layout } from "antd";
+import { DatePicker, Button, Layout, message } from "antd";
 import { SwapOutlined } from "@ant-design/icons";
 import UAParser from "ua-parser-js";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/store/hook";
-import { getSession } from "../../app/store/reducers/users";
-import { getBusLocations } from "../../app/store/reducers/locations";
+import { useAppDispatch, useAppSelector } from "../../store/hook";
+import { getSession } from "../../store/reducers/users";
+import { getBusLocations } from "../../store/reducers/locations";
 import AutoComplete from "../../components/AutoComplete";
-import "./style.css";
 import dayjs, { Dayjs } from "dayjs";
-import { ILocation } from "../../app/types/locationTypes";
+import type { ILocation } from "../../types/location.types";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+
+import "./style.css";
+
 const { Header } = Layout;
 
 const Home = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
+
+    const [storedLocations, setStoredLocations] = useLocalStorage("locations", {});
+    const [{ sessionId, deviceId }, setSession] = useLocalStorage<{ sessionId: string; deviceId: string }>("sessions", {
+        sessionId: "",
+        deviceId: "",
+    });
+
+    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs().add(1, "day"));
     const [firstValue, setFirstValue] = useState<string | null>(null);
     const [secondValue, setSecondValue] = useState<string | null>(null);
     const [firstSelectedObject, setFirstSelectedObject] = useState<ILocation>();
     const [secondSelectedObject, setSecondSelectedObject] = useState<ILocation>();
-    const firstRunRef = useRef<boolean>(true);
-    const fetchAgain = useRef<boolean>();
 
     const { busLocations } = useAppSelector((state) => state.locationsReducer);
 
@@ -31,32 +39,28 @@ const Home = () => {
         setSecondSelectedObject(tempFirst);
     };
     const selectToday = () => {
-        setSelectedDate(dayjs()); // Sets today's date
+        setSelectedDate(dayjs());
     };
 
-    // Function to handle selecting tomorrow's date
     const selectTomorrow = () => {
-        setSelectedDate(dayjs().add(1, "day")); // Sets tomorrow's date
+        setSelectedDate(dayjs().add(1, "day"));
     };
 
     const isTodayActive = selectedDate && selectedDate.isSame(dayjs(), "day");
     const isTomorrowActive = selectedDate && selectedDate.isSame(dayjs().add(1, "day"), "day");
 
-    const onClick = () => {
+    const handleFindClicked = () => {
         const date = dayjs(selectedDate).format("YYYY-MM-DD");
-        const ticketData = {
-            "origin-id": firstSelectedObject?.id,
-            "destination-id": secondSelectedObject?.id,
-            "departure-date": date,
-        };
 
-        navigate("/journey", { state: { ticketData } });
+        const locations = { origin: firstSelectedObject, destination: secondSelectedObject, date };
+        setStoredLocations(locations);
+
+        const uri = `/journey?originId=${firstSelectedObject?.id}&destinationId=${secondSelectedObject?.id}&date=${date}`;
+        const encoded = encodeURI(uri);
+        navigate(encoded);
     };
 
-    const onFetch = async (input: string | null) => {
-        const sessionId = localStorage.getItem("session-id");
-        const deviceId = localStorage.getItem("device-id");
-
+    const fetchLocations = async (input: string | null) => {
         const payload = {
             data: input,
             "device-session": {
@@ -72,12 +76,10 @@ const Home = () => {
 
     const fetchIP = async () => {
         try {
-            // Fetch IP address from ipify or another service
             const response = await fetch("https://api.ipify.org?format=json");
             const data = await response.json();
             const ipAddress = data.ip;
 
-            // Get browser information
             const parser = new UAParser();
             const browser = parser.getBrowser();
             const res = await dispatch(
@@ -94,41 +96,49 @@ const Home = () => {
                 }),
             );
             if (res.payload.status === "Success") {
-                localStorage.setItem("session-id", res.payload.data["session-id"]);
-                localStorage.setItem("device-id", res.payload.data["device-id"]);
+                setSession({
+                    sessionId: res.payload.data["session-id"],
+                    deviceId: res.payload.data["device-id"],
+                });
             }
         } catch (error) {
-            console.error("Error fetching IP address:", error);
+            message.error("Error getting session!");
         }
     };
+
     useEffect(() => {
-        const sessionId = localStorage.getItem("session-id");
-        const deviceId = localStorage.getItem("device-id");
         if (sessionId && deviceId) {
-            onFetch(null);
+            fetchLocations(null);
         } else {
             fetchIP();
         }
-    }, []);
+    }, [sessionId, deviceId]);
+
+    const firstRunRef = useRef<boolean>(true);
+    const fetchAgain = useRef<boolean>();
 
     useEffect(() => {
-        if (firstValue && fetchAgain.current) {
-            onFetch(firstValue); // Call the function to fetch locations based on secondValue
-        }
-    }, [firstValue]);
-    useEffect(() => {
-        if (secondValue && fetchAgain.current) {
-            onFetch(secondValue); // Call the function to fetch locations based on secondValue
-        }
-    }, [secondValue]);
-    useEffect(() => {
         if (busLocations.length && firstRunRef.current) {
-            setFirstSelectedObject(busLocations[0]); // Call the function to fetch locations based on secondValue
-            setSecondSelectedObject(busLocations[1]); // Call the function to fetch locations based on secondValue
+            setFirstSelectedObject(storedLocations.origin ?? busLocations[0]);
+            setSecondSelectedObject(storedLocations.destination ?? busLocations[1]);
+            if (storedLocations.date) setSelectedDate(dayjs(storedLocations.date));
             firstRunRef.current = false;
             fetchAgain.current = false;
         }
     }, [busLocations]);
+
+    useEffect(() => {
+        if (firstValue && fetchAgain.current) {
+            fetchLocations(firstValue);
+        }
+    }, [firstValue]);
+
+    useEffect(() => {
+        if (secondValue && fetchAgain.current) {
+            fetchLocations(secondValue);
+        }
+    }, [secondValue]);
+
     useEffect(() => {
         if (firstSelectedObject) {
             setFirstValue(firstSelectedObject.name);
@@ -137,6 +147,7 @@ const Home = () => {
             setFirstValue("");
         }
     }, [firstSelectedObject]);
+
     useEffect(() => {
         if (secondSelectedObject) {
             setSecondValue(secondSelectedObject.name);
@@ -196,9 +207,9 @@ const Home = () => {
                     <div className="date">
                         <span className="date-title">Date</span>
                         <DatePicker
-                            value={selectedDate ? dayjs(selectedDate) : null} // Convert to dayjs object
+                            value={selectedDate ? dayjs(selectedDate) : null}
                             onChange={(date) => setSelectedDate(date)}
-                            disabledDate={(current) => current && current < dayjs().startOf("day")} // Disable dates before today
+                            disabledDate={(current) => current && current < dayjs().startOf("day")}
                         />
                     </div>
                     <div className="buttons">
@@ -211,18 +222,15 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="action">
-                    {/* <Link to="/journey"> */}
-                    <Button onClick={onClick}>Find ticket</Button>
-                    {/* </Link> */}
+                    <Button onClick={handleFindClicked}>Find ticket</Button>
                 </div>
             </div>
             <div className="footer">
                 <p>
-                    Your journey starts here. Select your destinations and dates above!Your journey starts here. Select
-                    your destinations and dates above!Your journey starts here. Select your destinations and dates
-                    above!Your journey starts here. Select your destinations and dates above!Your journey starts here.
-                    Select your destinations and dates above!Your journey starts here. Select your destinations and
-                    dates above!
+                    Welcome to Travel Agent, where we offer personalized travel services to make your journeys smooth
+                    and memorable. From flight bookings to holiday packages and travel insurance, we provide everything
+                    you need for a hassle-free trip. With expert guidance and 24/7 support, we’re committed to ensuring
+                    your satisfaction every step of the way.
                 </p>
             </div>
         </div>

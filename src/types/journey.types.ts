@@ -1,4 +1,4 @@
-export type IInitJourney = {
+export type InitJourney = {
     loading: boolean;
     error: any;
     journeys: IJourneys[];
